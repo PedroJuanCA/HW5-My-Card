@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>my-Card</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+
+    .card {
+        width: 690px;
+        margin: 20px auto;
+        border: 10px solid red;
+        border-radius: 16px;
+        font-family: Arial Black;
+        background-color: white;
+        transition: background 0.3s;
+    }
+
+    .card-image {
+        width: 100%;
+    }
+
+    .card-content {
+        padding: 20px;
+    }
+
+    .card-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: black;
+        margin: 10px 10px 5px 5px;
+    }
+
+    .card-channel {
+        font-size: 14px;
+        color: black;
+        margin: 10px 25px 10px 10px;
+    }
+
+    .card-description {
+        font-size: 12px;
+        color: grey;
+        margin-left: 15px;
+        margin-bottom: 20px;
+    }
+
+    .card-actions {
+        gap: 20px;
+    }
+
+    .card-actions button {
+        padding: 6px 10px;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .subscribe-button {
+        margin: 10px 25px 10px 10px;
+        background-color: black;
+        color: white;
+        padding: 6px 10px;
+        font-size: 12px;
+        border-radius: 60px;
+        cursor: pointer;
+    }
+
+    .subscribe-button:hover {
+        opacity: 0.8;
+    }
+
+    .like-button, .share-button, .save-button {
+        background-color: grey;
+        color: white;
+        margin: 10px 10px;
+    }
+
+    .card-actions button:hover {
+        opacity: 0.8;
+    }
+
+    .card.fancy {
+        background-color: lightblue;
+        border: 2px solid darkblue;
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .highlight {
+        background-color: lightblue !important;
+    }
+
+    details summary {
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    details div {
+        border: 2px solid black;
+        text-align: left;
+        padding: 8px;
+        height: 70px;
+        overflow: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <button onclick="addCard()">Add Card</button>
+  <button onclick="changeTitle()">Change Title</button>
+  <button onclick="changeImage()">Change Image</button>
+  <button onclick="toggleBackground()">Toggle Background</button>
+  <button onclick="removeLastCard()">Remove Last Card</button>
+
+  <div id="cardContainer">
+      <div class="card">
+          <img class="card-image" src="https://d.latintimes.com/en/full/568511/bad-bunny-hot-ones.png?w=648&f=c7bec14122b2c2f83bbb64334fda1154">
+          <div class="card-content">
+              <h3 class="card-title">Bad Bunny Risks His Life While Eating Spicy Wings | Hot Ones</h3>
+              <p class="card-channel">First We Feast</p>
+              <p class="subscribe-button">Subscribe</p>
+              <p class="card-description">1,800,000 views · 3 days ago</p>
+              <details onclick="toggleFancy(this)">
+                  <summary>Description</summary>
+                  <div>
+                      <slot name="description">Biggest Latin Artist, Bad Bunny, takes on a spicy challenge!</slot>
+                  </div>
+              </details>
+              <div class="card-actions">
+                  <button class="like-button">Like</button>
+                  <button class="share-button">Share</button>
+                  <button class="save-button">Save</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <script>
+    let maxCards = 10;
+    let images = [ 
+        "https://th.bing.com/th/id/OIP.iU79AIzx9sis51R3mWJdPQHaFE?rs=1&pid=ImgDetMain",
+        "https://media.formula1.com/image/upload/content/dam/fom-website/manual/Misc/GaslyFeature/XPB_1056281_HiRes_crop.jpg",
+        "https://d.latintimes.com/en/full/568511/bad-bunny-hot-ones.png?w=648&f=c7bec14122b2c2f83bbb64334fda1154"
+    ];
+
+    function addCard() {
+        let container = document.getElementById("cardContainer");
+        if (container.children.length >= maxCards) return alert("Max 10 cards allowed!");
+        
+        let newCard = container.children[0].cloneNode(true);
+        container.appendChild(newCard);
+    }
+
+    function changeTitle() {
+        let cards = document.querySelectorAll(".card-title");
+        cards.forEach(card => card.textContent = "Cristiano Ronaldo Clutch Free Kick Against Spain!");
+        cards.forEach(card => card.textContent = "Gasly Wins His First Ever Grand Prix In Monza!");
+    }
+
+    function changeImage() {
+        let cards = document.querySelectorAll(".card img");
+        let newImage = images[Math.floor(Math.random() * images.length)];
+        cards.forEach(card => card.src = newImage);
+    }
+
+    function toggleBackground() {
+        let cards = document.querySelectorAll(".card");
+        cards.forEach(card => card.classList.toggle("highlight"));
+    }
+
+    function removeLastCard() {
+        let container = document.getElementById("cardContainer");
+        if (container.children.length > 1) {
+            container.removeChild(container.lastChild);
+        } else {
+            alert("Cannot remove the last card!");
+        }
+    }
+
+    function toggleFancy(detailsElement) {
+        let card = detailsElement.closest(".card");
+        if (detailsElement.hasAttribute("open")) {
+            card.classList.add("fancy");
+        } else {
+            card.classList.remove("fancy");
+        }
+    }
+  </script>
+</body>
+</html>
